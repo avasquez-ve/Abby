@@ -20,12 +20,18 @@ namespace AbbyWeb.Pages.Categories
 
         public async Task<IActionResult> OnPost()
         {
+            if (Category.Name == Category.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError(Category.Name, "The Name cannot exactly match the Display order");
+                //ModelState.AddModelError("", "The Name cannot exactly match the Display order"); -> Para mostrarlo solamente en el asp-validation-summary="All"
+            }
             if (ModelState.IsValid)
             {
                 await ApplicationDbContext.Categories.AddAsync(Category);
                 await ApplicationDbContext.SaveChangesAsync();
+                return RedirectToPage("Index");
             }
-            return RedirectToPage("Index");
+            return Page();
         }
     }
 }
